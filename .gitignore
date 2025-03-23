@@ -16,5 +16,5 @@ services/pg_data_wh
 services/grafana/alerting/1
 services/grafana/plugins
 
-er.py
-training_model/video/video.mp4
+
+video.mp4
