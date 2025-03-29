@@ -17,4 +17,3 @@ services/grafana/alerting/1
 services/grafana/plugins
 training_model/2_images_mapping
 training_model/1_images_train
-video.mp4
