@@ -1,14 +1,7 @@
-# import os
-# import json
-# import time
-# import logging
 from typing import Generator
 import cv2
-
 from elements.FrameElement import FrameElement
-# from elements.VideoEndBreakElement import VideoEndBreakElement
-
-# logger = logging.getLogger(__name__)
+import numpy as np
 
 
 class VideoReader:
@@ -25,14 +18,11 @@ class VideoReader:
         while True:
             ret, frame = self.stream.read()
             frame_number += 1
-
-            # frame_width = int(cap.get(3))
-            # frame_height = int(cap.get(4))
+# ------------------------блок 'для просмотра видео'------
             cv2.imshow('Webcam', frame)
-
-        # Выход из цикла по нажатию клавиши 'q'
+            # Выход из цикла по нажатию клавиши 'q'
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+            cv2.waitKey(1)
+# -----------------------конец блока 'для просмотра видео'------
             yield FrameElement(self.video_source, frame, frame_number)
