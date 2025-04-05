@@ -7,7 +7,7 @@ opencv_python_headless
 scipy ==1.11.3
 scikit-image
 tensorflow==2.16.1
-torch
+torch==1.13.1
 
 PyYAML ==6.0
 
