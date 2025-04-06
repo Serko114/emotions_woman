@@ -17,7 +17,7 @@ class VideoReader:
         frame_number = 0
         while True:
             ret, frame = self.stream.read()
-            print(frame.shape)
+            # print(frame.shape)
             frame_width = frame.shape[1]
             frame_height = frame.shape[0]
             frame_number += 1

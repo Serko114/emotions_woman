@@ -3,7 +3,7 @@
 
 # -------------detection, tracking noda: VideoReader.py------------------------------------------
 pipeline:
-  save_video : False  # Сохранение итогового видео обработки
+  save_video : True  # Сохранение итогового видео обработки
   video_show : True
 
 video_reader:
@@ -39,12 +39,12 @@ show_node:
   show_only_yolo_detections : False  # Отображать лишь результаты детекции без учета трекинга и прочей логики кода
   show_track_id_different_colors: True  # Отображать цвет бокса согласно id трека, а не логике прибытия объекта
   show_info_statistics: False  # Вывод информации о статистике в отдельном окне справа от кадра
-  show_russians_classes: {'calm': 'спокойная :|', 
-                          'joyful': 'радостная :)', 
-                          'delighted': 'восхищенная 8D', 
-                          'surprised': 'удивленная :O', 
-                          'sad': 'грустная :(',
-                          'evil': 'злая :X'}
+  show_russians_classes: {'calm': 'спокойствие :|', 
+                          'joyful': 'радость :)', 
+                          'delighted': 'восхищение 8D', 
+                          'surprised': 'удивление :O', 
+                          'sad': 'грусть :(',
+                          'evil': 'злость :X'}
 # save_node:
 #   save_video: True
 #   file_save_video: content_for_readme/video_gif/output_video.mp4
