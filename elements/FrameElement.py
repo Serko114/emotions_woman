@@ -21,10 +21,6 @@ class FrameElement:
         # далее
 
 
-
-
-
-
     ) -> None:
         self.source = source  # Путь к видео или номер камеры с которой берем поток
         self.frame = frame  # Кадр bgr формата

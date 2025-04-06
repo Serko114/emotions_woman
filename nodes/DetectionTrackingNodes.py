@@ -23,7 +23,7 @@ class DetectionTrackingNodes:
         self.imgsz = config_yolo["imgsz"]
         self.classes_to_detect = config_yolo["classes_to_detect"]
 
-        config_bytetrack= config["tracking_node"]
+        config_bytetrack = config["tracking_node"]
 
         # ByteTrack param
         first_track_thresh = config_bytetrack["first_track_thresh"]
@@ -52,7 +52,8 @@ class DetectionTrackingNodes:
         frame_element.detected_conf = outputs[0].boxes.conf.cpu().tolist()
         detected_cls = outputs[0].boxes.cls.cpu().int().tolist()
         frame_element.detected_cls = [self.classes[i] for i in detected_cls]
-        frame_element.detected_xyxy = outputs[0].boxes.xyxy.cpu().int().tolist()
+        frame_element.detected_xyxy = outputs[0].boxes.xyxy.cpu(
+        ).int().tolist()
 
         # Преподготовка данных на подачу в трекер
         detections_list = self._get_results_dor_tracker(outputs)
@@ -61,16 +62,19 @@ class DetectionTrackingNodes:
         if len(detections_list) == 0:
             detections_list = np.empty((0, 6))
 
-        track_list = self.tracker.update(torch.tensor(detections_list), xyxy=True)
+        track_list = self.tracker.update(
+            torch.tensor(detections_list), xyxy=True)
 
         # Получение id list
         frame_element.id_list = [int(t.track_id) for t in track_list]
 
         # Получение box list
-        frame_element.tracked_xyxy = [list(t.tlbr.astype(int)) for t in track_list]
+        frame_element.tracked_xyxy = [
+            list(t.tlbr.astype(int)) for t in track_list]
 
         # Получение object class names
-        frame_element.tracked_cls = [self.classes[int(t.class_name)] for t in track_list]
+        frame_element.tracked_cls = [
+            self.classes[int(t.class_name)] for t in track_list]
 
         # Получение conf scores
         frame_element.tracked_conf = [t.score for t in track_list]
@@ -88,9 +92,12 @@ class DetectionTrackingNodes:
                 bbox = result.boxes.xyxy.cpu().numpy()
                 confidence = result.boxes.conf.cpu().numpy()
 
-                class_id_value = (
-                    2  # Будем все трекуемые объекты считать классом car чтобы не было ошибок
-                )
+                class_id_value = class_id[0]
+                # class_id_value = (
+                #     2  # Будем все трекуемые объекты считать классом car чтобы не было ошибок
+                # )
+                print(confidence)
+                print(f'класс: {class_id_value} уверенность: {confidence[0]}')
 
                 merged_detection = [
                     bbox[0][0],
@@ -100,7 +107,7 @@ class DetectionTrackingNodes:
                     confidence[0],
                     class_id_value,
                 ]
-
+                print(f'коробки: {merged_detection}')
                 detections_list.append(merged_detection)
 
         return np.array(detections_list)
