@@ -18,6 +18,8 @@ class VideoShowDetection:
         self.show_track_id_different_colors = config_show_node["show_track_id_different_colors"]
         self.show_info_statistics = config_show_node["show_info_statistics"]
         self.russians_classes = config_show_node["show_russians_classes"]
+        self.fps_counter_N_frames_stat = config_show_node['fps_counter_N_frames_stat']
+        # self.file_save_video = config_show_node['folder_save_video']
         # Параметры для шрифтов:
         self.fontFace = fontFace = cv2.FONT_HERSHEY_COMPLEX  # 1
         self.fontScale = 0.5
@@ -26,6 +28,7 @@ class VideoShowDetection:
         self.thickness_lines = 2
         # Параметры для экрана статистики:
         self.width_window = 700  # ширина экрана в пикселях
+        # self.save_video = config_show_node["save_video"]
 
     def process(self, frame_element: FrameElement, fps_counter=None) -> FrameElement:
         # --------блок - смоткрим видео без рамки------------------
@@ -80,7 +83,19 @@ class VideoShowDetection:
         frame_show = frame_result
         # frame_show = cv2.resize(frame_result.copy(),
         #                         (-1, -1), fx=self.scale, fy=self.scale)
-
+        # --------------- блок записи видео для readme ------------------
+        # if self.save_video:
+        #     # fps, ширина, высота
+        #     fps = int(self.fps_counter_N_frames_stat)
+        #     frame_width = int(frame_result.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #     frame_height = int(frame_result.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        #     # определение параметров записи
+        #     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        #     out = cv2.VideoWriter(self.file_save_video, fourcc,
+        #                           fps, (frame_width, frame_height))
+        # if self.save_video:
+        #     out.write(frame_show)
+        # ---------------------------------------------------------------
         if self.imshow:
             cv2.imshow(frame_element.source, frame_show)
             cv2.waitKey(1)

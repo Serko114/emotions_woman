@@ -17,6 +17,9 @@ class VideoReader:
         frame_number = 0
         while True:
             ret, frame = self.stream.read()
+            print(frame.shape)
+            frame_width = frame.shape[1]
+            frame_height = frame.shape[0]
             frame_number += 1
 # ------------------------блок 'для просмотра видео'------
             # cv2.imshow('Webcam', frame)
@@ -25,4 +28,4 @@ class VideoReader:
             #     break
             # cv2.waitKey(1)
 # -----------------------конец блока 'для просмотра видео'------
-            yield FrameElement(self.video_source, frame, frame_number)
+            yield FrameElement(self.video_source, frame, frame_number, frame_width, frame_height)

@@ -9,6 +9,8 @@ class FrameElement:
         source: str,
         frame: np.ndarray,
         frame_num: float,
+        frame_width: int,
+        frame_height: int,
         frame_result: np.ndarray | None = None,
         # detection
         detected_conf: list | None = None,
@@ -25,6 +27,8 @@ class FrameElement:
         self.source = source  # Путь к видео или номер камеры с которой берем поток
         self.frame = frame  # Кадр bgr формата
         self.frame_num = frame_num  # Нормер кадра с потока
+        self.frame_width = frame_width  # ширина кадра
+        self.frame_height = frame_height  # ширина кадра
         self.frame_result = frame_result  # Итоговый обработанный кадр
         # ------detection-------
         # Список уверенностей задетектированных объектов

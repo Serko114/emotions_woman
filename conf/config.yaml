@@ -2,6 +2,10 @@
 # ------------------------------------------------- NODES --------------------------------------------------
 
 # -------------detection, tracking noda: VideoReader.py------------------------------------------
+pipeline:
+  save_video : False  # Сохранение итогового видео обработки
+  video_show : True
+
 video_reader:
   src: video/video.mp4 #${oc.env:VIDEO_SRC} # путь до файла обработки или номер камеры (int) или ссылки на m3u8 / rtsp поток
   # skip_secs : 0  # считываем кадры раз в <skip_secs> секунд
@@ -41,3 +45,10 @@ show_node:
                           'surprised': 'удивленная :O', 
                           'sad': 'грустная :(',
                           'evil': 'злая :X'}
+# save_node:
+#   save_video: True
+#   file_save_video: content_for_readme/video_gif/output_video.mp4
+
+video_saver_node:
+  fps : 24  # при увеличении позволяет ускорить итоговое видео
+  out_folder : content_for_readme/video_gif/output_video.mp4  # в какую папку сохранить результат
