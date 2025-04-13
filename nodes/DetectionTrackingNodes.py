@@ -48,7 +48,7 @@ class DetectionTrackingNodes:
 
         outputs = self.model.predict(frame, imgsz=self.imgsz, conf=self.conf, verbose=False,
                                      iou=self.iou, classes=self.classes_to_detect)
-
+        # print(f'OUTPUTS: {outputs}')
         frame_element.detected_conf = outputs[0].boxes.conf.cpu().tolist()
         detected_cls = outputs[0].boxes.cls.cpu().int().tolist()
         frame_element.detected_cls = [self.classes[i] for i in detected_cls]
@@ -57,14 +57,15 @@ class DetectionTrackingNodes:
 
         # Преподготовка данных на подачу в трекер
         detections_list = self._get_results_dor_tracker(outputs)
-
+        # на выходе будет вот это: [[277.84, 68.415, 429.72, 289.89, 0.98837, 0]]
+        # print(f'РЕЗУЛЬТИРУЮЩИЙ СПИСОК: {detections_list}')
         # Если детекций нет, то оправляем пустой массив
         if len(detections_list) == 0:
             detections_list = np.empty((0, 6))
 
         track_list = self.tracker.update(
             torch.tensor(detections_list), xyxy=True)
-
+        # print(f'ID: {[int(t.track_id) for t in track_list]}')
         # Получение id list
         frame_element.id_list = [int(t.track_id) for t in track_list]
 
@@ -78,7 +79,13 @@ class DetectionTrackingNodes:
 
         # Получение conf scores
         frame_element.tracked_conf = [t.score for t in track_list]
-
+        # -------------------------------------------------------------
+        print(f'{[int(t.track_id) for t in track_list]} \
+              {[list(t.tlbr.astype(int)) for t in track_list]} \
+              {[self.classes[int(t.class_name)] for t in track_list]} \
+              {[t.score for t in track_list]}')
+        # типа результат: [1] [[272, 63, 424, 289]] ['joyful'] [0.9907557368278503]
+        # -------------------------------------------------------------
         return frame_element
 
     def _get_results_dor_tracker(self, results) -> np.ndarray:
@@ -96,8 +103,8 @@ class DetectionTrackingNodes:
                 # class_id_value = (
                 #     2  # Будем все трекуемые объекты считать классом car чтобы не было ошибок
                 # )
-                print(confidence)
-                print(f'класс: {class_id_value} уверенность: {confidence[0]}')
+                # print(confidence)
+                # print(f'класс: {class_id_value} уверенность: {confidence[0]}')
 
                 merged_detection = [
                     bbox[0][0],
@@ -107,7 +114,14 @@ class DetectionTrackingNodes:
                     confidence[0],
                     class_id_value,
                 ]
-                print(f'коробки: {merged_detection}')
+                # print(f'коробки: {merged_detection}')
                 detections_list.append(merged_detection)
+                # print(f'РЕЗУЛЬТАТ: {merged_detection}')
+        # ----------------------------
+        # отбирает одну детакцию с максимальным значением уверенности для одного id треккинга
 
+        s = max([i[-2] for i in detections_list])
+        detections_list = [i for i in detections_list if i[-2] == s]
+        # ----------------------------
+        # print(f'РЕЗУЛЬТАТ ОКОНЧАТЕЛЬНЫЙ: {detections_list}')
         return np.array(detections_list)

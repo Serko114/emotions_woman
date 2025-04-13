@@ -3,7 +3,7 @@
 
 # -------------detection, tracking noda: VideoReader.py------------------------------------------
 pipeline:
-  save_video : True  # Сохранение итогового видео обработки
+  save_video : False  # Сохранение итогового видео обработки
   video_show : True
 
 video_reader:
@@ -52,3 +52,6 @@ show_node:
 video_saver_node:
   fps : 24  # при увеличении позволяет ускорить итоговое видео
   out_folder : content_for_readme/video_gif/output_video.mp4  # в какую папку сохранить результат
+
+send_info_db_node:
+  drop_table: ${oc.decode:${oc.env:DROP_TABLE}}  # Нужно ли полностью очищать бд при повторном перезапуске приложения (полезно при тестированиях)

@@ -26,8 +26,8 @@ def main(config) -> None:
             show_detection_node.process(frame_element)
         if save_video:
             video_saver_node.process(frame_element)
-        print('iiiiiiiiii')
-        print()
+        # print('iiiiiiiiii')
+        # print()
 
 
 if __name__ == "__main__":
