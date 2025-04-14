@@ -22,6 +22,7 @@ class DetectionTrackingNodes:
         self.iou = config_yolo["iou"]
         self.imgsz = config_yolo["imgsz"]
         self.classes_to_detect = config_yolo["classes_to_detect"]
+        self.dict_clsses = config_yolo["dict_clsses"]
 
         config_bytetrack = config["tracking_node"]
 
@@ -80,13 +81,26 @@ class DetectionTrackingNodes:
         # Получение conf scores
         frame_element.tracked_conf = [t.score for t in track_list]
         # -------------------------------------------------------------
+        # создаем список с указанием единичкой на класс [0 1 0 0 0 0] (словарь см. в config.yaml)
+        frame_element.cls_id = self.f(track_list)
+        # print(self.f(track_list))
+        # -------------------------------------------------------------
         print(f'{[int(t.track_id) for t in track_list]} \
-              {[list(t.tlbr.astype(int)) for t in track_list]} \
-              {[self.classes[int(t.class_name)] for t in track_list]} \
-              {[t.score for t in track_list]}')
-        # типа результат: [1] [[272, 63, 424, 289]] ['joyful'] [0.9907557368278503]
+                {[list(t.tlbr.astype(int)) for t in track_list]} \
+                {[self.classes[int(t.class_name)] for t in track_list]} \
+                {self.f(track_list)} \
+                {[t.score for t in track_list]}')
+        # типа результат: [1] [[272, 63, 424, 289]] ['joyful'] [0 1 0 0 0 0] [0.9907557368278503]
         # -------------------------------------------------------------
         return frame_element
+
+    def f(self, tr_lst) -> list:
+        # функция для создания списка для подачи в столбцы эмоций в двоичном виде [0 1 0 0 0 0] (словарь см. в config.yaml)
+        massive = np.array([int(i) for i in np.zeros(6)])
+        classs_id = [self.classes[int(t.class_name)] for t in tr_lst][0]
+        s = self.dict_clsses[classs_id]
+        massive[s] = 1
+        return massive
 
     def _get_results_dor_tracker(self, results) -> np.ndarray:
         # Приведение данных в правильную форму для трекера
@@ -119,7 +133,6 @@ class DetectionTrackingNodes:
                 # print(f'РЕЗУЛЬТАТ: {merged_detection}')
         # ----------------------------
         # отбирает одну детакцию с максимальным значением уверенности для одного id треккинга
-
         s = max([i[-2] for i in detections_list])
         detections_list = [i for i in detections_list if i[-2] == s]
         # ----------------------------

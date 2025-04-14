@@ -4,6 +4,7 @@
 # -------------detection, tracking noda: VideoReader.py------------------------------------------
 pipeline:
   save_video : False  # Сохранение итогового видео обработки
+  send_info_db: True  # Сохраняем ли инфо в бд (требуется заранее запустить микросервисы если ставите True)
   video_show : True
 
 video_reader:
@@ -18,6 +19,7 @@ detection_node:
   confidence: 0.10  # Порог уверенности детектора (чем больше значение, тем меньше находит)
   iou: 0.7  # Порог NMS (чем больше значение, тем больше находит)
   imgsz: 640  # Ресайз при инференсе (640 по умолчанию)
+  dict_clsses: {'calm':0, 'joyful':1, 'delighted':2, 'surprised':3, 'sad':4, 'evil':5}
 
 
 tracking_node:  
@@ -45,9 +47,6 @@ show_node:
                           'surprised': 'удивление :O', 
                           'sad': 'грусть :(',
                           'evil': 'злость :X'}
-# save_node:
-#   save_video: True
-#   file_save_video: content_for_readme/video_gif/output_video.mp4
 
 video_saver_node:
   fps : 24  # при увеличении позволяет ускорить итоговое видео
@@ -55,3 +54,11 @@ video_saver_node:
 
 send_info_db_node:
   drop_table: ${oc.decode:${oc.env:DROP_TABLE}}  # Нужно ли полностью очищать бд при повторном перезапуске приложения (полезно при тестированиях)
+  how_often_add_info: 5  # как часто добавлять новую информацию (раз в столько секунд)
+  table_name: ${oc.env:TABLE_NAME}  # имя таблицы в БД в которую ведем запись
+  connection_info:  # данные о подключении (должны совпадать со значениями из docker-compose файла)
+    user: ${oc.env:POSTGRES_USER}
+    password: ${oc.env:POSTGRES_PASSWORD}
+    host: db
+    port: 5432 # порт контейнера с PostgreSQL
+    database: ${oc.env:POSTGRES_DB}
