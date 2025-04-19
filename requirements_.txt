@@ -1,0 +1,25 @@
+filterpy ==1.4.5
+lapx ==0.5.5
+matplotlib ==3.8.0
+# numpy ==1.24.1
+opencv_python==4.9.0.80
+opencv_python_headless
+scipy ==1.11.3
+scikit-image
+tensorflow==2.16.1
+# torch==1.13.1
+
+PyYAML ==6.0
+
+click
+
+ultralytics ==8.2.38
+shapely ==2.0.3
+psycopg2-binary ==2.9.9
+hydra-core ==1.3.2
+Flask ==3.0.3
+
+
+# cython-bbox ==0.1.5
+tensorrt ==10.1.0
+

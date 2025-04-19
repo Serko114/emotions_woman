@@ -17,8 +17,8 @@ class SendInfoDBNode:
         self.drop_table = config_db["drop_table"]
         self.how_often_add_info = config_db["how_often_add_info"]
         self.table_name = config_db["table_name"]
-        self.last_db_update = time.time()
-
+        # self.last_db_update = time.time()
+        print('--------------------------------------')
         # Параметры подключения к базе данных
         db_connection = config_db["connection_info"]
         conn_params = {
@@ -28,16 +28,17 @@ class SendInfoDBNode:
             "port": str(db_connection["port"]),
             "database": db_connection["database"],
         }
-
-        self.buffer_analytics_sec = (
-            config["general"]["buffer_analytics"] * 60
-            + config["general"]["min_time_life_track"]
-        )  # столько по времени буфер набирается и информацию о статистеке выводить рано
+        # print('--------------------------------------')
+        # self.buffer_analytics_sec = (
+        #     config["general"]["buffer_analytics"] * 60
+        #     + config["general"]["min_time_life_track"]
+        # )  # столько по времени буфер набирается и информацию о статистеке выводить рано
 
         # Подключение к базе данных
         try:
             self.connection = psycopg2.connect(**conn_params)
             print("Connected to PostgreSQL")
+            print('--------------------------------------')
         except (Exception, psycopg2.Error) as error:
             print("Error while connecting to PostgreSQL:", error)
 
@@ -93,7 +94,8 @@ class SendInfoDBNode:
         try:
             self.cursor.execute(create_table_query)
             self.connection.commit()
-            logger.info(f"Table {self.table_name} created successfully")
+            logger.info(f"СОЗДАНИЕ ТАБЛИЦЫ {self.table_name} ЗАВЕРШЕНО УДАЧНО")
+            print('--------------------------------------')
         except (Exception, psycopg2.Error) as error:
             logger.error(f"Error while creating table: {error}")
 
