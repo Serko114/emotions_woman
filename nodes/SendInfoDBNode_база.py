@@ -28,7 +28,6 @@ class SendInfoDBNode:
             "port": str(db_connection["port"]),
             "database": db_connection["database"],
         }
-        print(conn_params)
         # print('--------------------------------------')
         # self.buffer_analytics_sec = (
         #     config["general"]["buffer_analytics"] * 60

@@ -8,7 +8,7 @@ services:
     command: python main.py
     environment:
       - VIDEO_SRC=videos/video.mp4
-      # - TABLE_NAME=emotions
+      - TABLE_NAME=emotions
       - DROP_TABLE=False
       # - DISPLAY=emotions_wom:0.0
 

@@ -16,8 +16,8 @@ def main(config) -> None:
     save_video = config["pipeline"]["save_video"]
     send_info_db = config["pipeline"]["send_info_db"]
     video_show = config["pipeline"]["video_show"]
-    # if send_info_db:
-    #     send_info_db_node = SendInfoDBNode(config)
+    if send_info_db:
+        send_info_db_node = SendInfoDBNode(config)
     if video_show:
         show_detection_node = VideoShowDetection(config)
     if save_video:
@@ -27,14 +27,14 @@ def main(config) -> None:
         frame_element = detection_node.process(frame_element)
         print('FUCK!')
 
-        # if send_info_db:
-        #     frame_element = send_info_db_node.process(frame_element)
+        if send_info_db:
+            frame_element = send_info_db_node.process(frame_element)
         # frame_element = show_detection_node.process(frame_element)
         if video_show:
             show_detection_node.process(frame_element)
         if save_video:
             video_saver_node.process(frame_element)
-        # print('iiiiiiiiii')
+        print('iiiiiiiiii')
         # print()
 
 
