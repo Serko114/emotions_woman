@@ -4,7 +4,7 @@ from nodes.DetectionTrackingNodes import DetectionTrackingNodes
 from nodes.VideoShow import VideoShowDetection
 from nodes.VideoSaverNode import VideoSaverNode
 from nodes.SendInfoDBNode import SendInfoDBNode
-import cv2
+# import cv2
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
@@ -25,10 +25,11 @@ def main(config) -> None:
 
     for frame_element in video_reader.process():
         frame_element = detection_node.process(frame_element)
-        print('FUCK!')
+        print('FUCK111!')
 
         if send_info_db:
             frame_element = send_info_db_node.process(frame_element)
+        print('FUCK222!')
         # frame_element = show_detection_node.process(frame_element)
         if video_show:
             show_detection_node.process(frame_element)

@@ -1,61 +1,67 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  emotions_wom:
+
+  backend_traffic_analyzer:
     build: .
     restart: always
-    container_name: emotion_wom
-    command: python main.py
+    container_name: backend_traffic_analyzer
+    command: python main_optimized.py
     environment:
-      - VIDEO_SRC=videos/video.mp4
-      - TABLE_NAME=emotions
+      - VIDEO_SRC=test_videos/test_video.mp4
+      - ROADS_JSON=configs/entry_exit_lanes.json
+      - TABLE_NAME=traffic_info
       - DROP_TABLE=False
-      # - DISPLAY=emotions_wom:0.0
-
     volumes:
       - .:/app
     ports:
       - "8100:8100"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     networks:
       - prod_network
-    env_file:
-      - secrets.txt
-  pg_db:
-    container_name: pg_db
-    image: postgres:15
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: db_emotions
-    ports:
-      - "5432:5432"
-    expose:
-      - "5432"
-    volumes:
-      - ./services/db:/var/lib/postgresql/data
-    networks:
-      - prod_network
-    env_file:
+    env_file: 
       - secrets.txt
 
-  db_view:
-    container_name: pgadmin4
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: kraken114@bk.ru
-      PGADMIN_DEFAULT_PASSWORD: root
+  pg_data_wh:
+    container_name: pg_data_wh
+    image: postgres:15
+    restart: always
     ports:
-      - "5050:80"
+      - "5488:5432"
+    volumes:
+      - ./services/pg_data_wh:/var/lib/postgresql/data
     networks:
       - prod_network
-    env_file:
+    env_file: 
+      - secrets.txt
+
+  grafana:
+    container_name: grafana_building
+    image: grafana/grafana:latest
+    environment:
+      TZ: "Europe/Moscow"
+      GF_ALLOW_EMBEDDING: true
+      GF_PANELS_DISABLE_SANITIZE_HTML: true
+    restart: unless-stopped
+    ports:
+      - "3111:3000"
+    volumes:
+      - ./services/grafana:/var/lib/grafana
+    networks:
+      - prod_network
+    env_file: 
       - secrets.txt
 
 volumes:
-  db:
-    # pg_grafana:
-    # grafana:
+  pg_data_wh:
+  pg_grafana:
+  grafana:
 
 networks:
   prod_network:

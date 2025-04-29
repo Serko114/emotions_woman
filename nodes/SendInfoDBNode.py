@@ -1,6 +1,7 @@
 import time
 import logging
 import psycopg2
+import numpy as np
 
 from elements.FrameElement import FrameElement
 from elements.VideoEndBreakElement import VideoEndBreakElement
@@ -79,17 +80,17 @@ class SendInfoDBNode:
             Xmin INT,
             Ymin INT,
             Xmax INT,
-            Ymax INT,
-            class VARCHAR(12),
-            calm INT,
-            joyful INT,
-            delighted INT,
-            surprised INT,
-            sad INT
-            evil INT
-            conf FLOAT(4)
-        );
-        """
+            Ymax INT);"""
+        #     class VARCHAR(12),
+        #     calm INT,
+        #     joyful INT,
+        #     delighted INT,
+        #     surprised INT,
+        #     sad INT
+        #     evil INT
+        #     conf FLOAT(4)
+        # );
+        # """
 
         # Создание таблицы
         try:
@@ -101,75 +102,86 @@ class SendInfoDBNode:
             logger.error(f"Error while creating table: {error}")
 
     # @profile_time
-    # def process(self, frame_element: FrameElement) -> FrameElement:
-    #     # Выйти из обработки если это пришел VideoEndBreakElement а не FrameElement
-    #     if isinstance(frame_element, VideoEndBreakElement):
-    #         return frame_element
-    #     assert isinstance(
-    #         frame_element, FrameElement
-    #     ), f"SendInfoDBNode | Неправильный формат входного элемента {type(frame_element)}"
+    def process(self, frame_element: FrameElement) -> FrameElement:
+        # Выйти из обработки если это пришел VideoEndBreakElement а не FrameElement
+        if isinstance(frame_element, VideoEndBreakElement):
+            return frame_element
+        assert isinstance(
+            frame_element, FrameElement
+        ), f"SendInfoDBNode | Неправильный формат входного элемента {type(frame_element)}"
 
-    #     # Получение значений для записи в бд новой строки:
-    #     info_dictionary = frame_element.info
-    #     timestamp = frame_element.timestamp
-    #     timestamp_date = frame_element.timestamp_date
+        # Получение значений для записи в бд новой строки:
+        # info_dictionary = frame_element.info
+        # timestamp = frame_element.timestamp
+        # timestamp_date = frame_element.timestamp_date
 
-    #     # Проверка, нужно ли отправлять информацию в базу данных
-    #     current_time = time.time()
-    #     if current_time - self.last_db_update >= self.how_often_add_info:
-    #         self._insert_in_db(info_dictionary, timestamp, timestamp_date)
-    #         frame_element.send_info_of_frame_to_db = True
-    #         self.last_db_update = (
-    #             current_time  # Обновление времени последнего обновления базы данных
-    #         )
+        id_list = frame_element.id_list  # вид [1]
+        bboxes = frame_element.tracked_xyxy  # вид [[280, 65, 430, 289]]
+        # id_list = '{' + ','.join(map(str, np.array(id_list).flatten())) + '}'
+        # bboxes = '{' + ','.join(map(str, np.array(bboxes).flatten())) + '}'
+# данные, которые нужно занести в таблицу: [1]  [[280, 65, 430, 289]] ['sad'] [0 0 0 0 1 0] [0.9110729694366455]
+        # Проверка, нужно ли отправлять информацию в базу данных
+        # current_time = time.time()
+        # if current_time - self.last_db_update >= self.how_often_add_info:
+        #     self._insert_in_db(info_dictionary, timestamp, timestamp_date)
+        # frame_element.send_info_of_frame_to_db = True
+        # self.last_db_update = (
+        #     current_time  # Обновление времени последнего обновления базы данных
+        # )
+        self._insert_in_db(id_list, bboxes)
 
-    #     return frame_element
+        return frame_element
 
-    # def _insert_in_db(
-    #     self, info_dictionary: dict, timestamp: float, timestamp_date: float
-    # ) -> None:
-    #     # Формирование и выполнение SQL-запроса для вставки данных в бд
-    #     insert_query = (
-    #         f"INSERT INTO {self.table_name} "
-    #         "(timestamp, timestamp_date, cars, road_1, road_2, road_3, road_4, road_5) "
-    #         "VALUES (%s, to_timestamp(%s), %s, %s, %s, %s, %s, %s);"
-    #     )
-    #     try:
-    #         self.cursor.execute(
-    #             insert_query,
-    #             (
-    #                 timestamp,
-    #                 timestamp_date,
-    #                 info_dictionary["cars_amount"],
-    #                 (
-    #                     info_dictionary["roads_activity"][1]
-    #                     if timestamp >= self.buffer_analytics_sec
-    #                     else None
-    #                 ),
-    #                 (
-    #                     info_dictionary["roads_activity"][2]
-    #                     if timestamp >= self.buffer_analytics_sec
-    #                     else None
-    #                 ),
-    #                 (
-    #                     info_dictionary["roads_activity"][3]
-    #                     if timestamp >= self.buffer_analytics_sec
-    #                     else None
-    #                 ),
-    #                 (
-    #                     info_dictionary["roads_activity"][4]
-    #                     if timestamp >= self.buffer_analytics_sec
-    #                     else None
-    #                 ),
-    #                 (
-    #                     info_dictionary["roads_activity"][5]
-    #                     if timestamp >= self.buffer_analytics_sec
-    #                     else None
-    #                 ),
-    #             ),
-    #         )
-    #         self.connection.commit()
-    #         logger.info(f"Successfully inserted data into PostgreSQL")
-    #     except (Exception, psycopg2.Error) as error:
-    #         logger.error(
-    #             f"Error while inserting data into PostgreSQL: {error}")
+    def _insert_in_db(
+        self, id_list: list, bboxes: list  # timestamp: float, timestamp_date: float
+    ) -> None:
+        # Формирование и выполнение SQL-запроса для вставки данных в бд
+        insert_query = (
+            f"INSERT INTO {self.table_name} "
+            # , class, calm, joyful, delighted, surprised, sad, evil, conf) "
+            "(            track_id, Xmin, Ymin, Xmax, Ymax)"
+            "VALUES (%s, %s, %s, %s, %s);"  # , %s, %s, %s);"
+        )
+        try:
+            self.cursor.execute(
+                insert_query,
+                (
+                    int(id_list[0]),
+                    int(bboxes[0][0]),
+                    int(bboxes[0][1]),
+                    int(bboxes[0][2]),
+                    int(bboxes[0][3])
+                    # frame_element.tracked_xyxy,
+                    # info_dictionary["cars_amount"],
+                    # (
+                    #     info_dictionary["roads_activity"][1]
+                    #     if timestamp >= self.buffer_analytics_sec
+                    #     else None
+                    # ),
+                    # (
+                    #     info_dictionary["roads_activity"][2]
+                    #     if timestamp >= self.buffer_analytics_sec
+                    #     else None
+                    # ),
+                    # (
+                    #     info_dictionary["roads_activity"][3]
+                    #     if timestamp >= self.buffer_analytics_sec
+                    #     else None
+                    # ),
+                    # (
+                    #     info_dictionary["roads_activity"][4]
+                    #     if timestamp >= self.buffer_analytics_sec
+                    #     else None
+                    # ),
+                    # (
+                    #     info_dictionary["roads_activity"][5]
+                    #     if timestamp >= self.buffer_analytics_sec
+                    #     else None
+                    # ),
+                ),
+            )
+            self.connection.commit()
+            logger.info(f"Successfully inserted data into PostgreSQL")
+        except (Exception, psycopg2.Error) as error:
+            logger.error(
+                f"Error while inserting data into PostgreSQL: {error}")

@@ -14,13 +14,14 @@ class VideoReader:
 
     def process(self) -> Generator[FrameElement, None, None]:
         # номер кадра текущего видео
-        frame_number = 0
+        frame_num = 0
         while True:
             ret, frame = self.stream.read()
             # print(frame.shape)
             frame_width = frame.shape[1]
             frame_height = frame.shape[0]
-            frame_number += 1
+            frame_num += 1
+            source = self.video_pth
 # ------------------------блок 'для просмотра видео'------
             # cv2.imshow('Webcam', frame)
             # # Выход из цикла по нажатию клавиши 'q'
@@ -28,4 +29,4 @@ class VideoReader:
             #     break
             # cv2.waitKey(1)
 # -----------------------конец блока 'для просмотра видео'------
-            yield FrameElement(self.video_source, frame, frame_number, frame_width, frame_height)
+            yield FrameElement(source, frame, frame_num, frame_width, frame_height)
