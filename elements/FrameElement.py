@@ -44,3 +44,4 @@ class FrameElement:
         # Список по числу классов, двоичная хрень, типа [0, 0, 1, 0, 0, 0] для подачи в DB
         self.cls_id = cls_id
         # -----------------------
+        self.send_info_of_frame_to_db = True

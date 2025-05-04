@@ -82,14 +82,14 @@ class DetectionTrackingNodes:
         frame_element.tracked_conf = [t.score for t in track_list]
         # -------------------------------------------------------------
         # создаем список с указанием единичкой на класс [0 1 0 0 0 0] (словарь см. в config.yaml)
-        frame_element.cls_id = self.f(track_list)
+        frame_element.cls_id = list(self.f(track_list))
         # print(self.f(track_list))
         # -------------------------------------------------------------
-        print(f'{[int(t.track_id) for t in track_list]} \
-                {[list(t.tlbr.astype(int)) for t in track_list]} \
-                {[self.classes[int(t.class_name)] for t in track_list]} \
-                {self.f(track_list)} \
-                {[t.score for t in track_list]}')
+        print(f'id: {[int(t.track_id) for t in track_list]} \
+                рамка: {[list(t.tlbr.astype(int)) for t in track_list]} \
+                класс: {[self.classes[int(t.class_name)] for t in track_list]} \
+                бинарный класс:{list(self.f(track_list))} \
+                вероятность: {[t.score for t in track_list]}')
         # типа результат: [1] [[272, 63, 424, 289]] ['joyful'] [0 1 0 0 0 0] [0.9907557368278503]
         # -------------------------------------------------------------
         return frame_element

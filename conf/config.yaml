@@ -4,8 +4,8 @@
 # -------------detection, tracking noda: VideoReader.py------------------------------------------
 pipeline:
   save_video : False  # Сохранение итогового видео обработки
-  send_info_db: False  # Сохраняем ли инфо в бд (требуется заранее запустить микросервисы если ставите True)
-  video_show : True
+  send_info_db: True  # Сохраняем ли инфо в бд (требуется заранее запустить микросервисы если ставите True)
+  video_show : False
 
 video_reader:
   src: video/video.mp4 #${oc.env:VIDEO_SRC} # путь до файла обработки или номер камеры (int) или ссылки на m3u8 / rtsp поток
@@ -53,12 +53,12 @@ video_saver_node:
   out_folder : content_for_readme/video_gif/output_video.mp4  # в какую папку сохранить результат
 
 send_info_db_node:
-  drop_table: ${oc.decode:${oc.env:DROP_TABLE}}  # Нужно ли полностью очищать бд при повторном перезапуске приложения (полезно при тестированиях)
+  drop_table: True  # Нужно ли полностью очищать бд при повторном перезапуске приложения (полезно при тестированиях)
   how_often_add_info: 5  # как часто добавлять новую информацию (раз в столько секунд)
-  table_name: ${oc.env:TABLE_NAME}  # имя таблицы в БД в которую ведем запись
+  table_name: russia #${oc.env:TABLE_NAME}  # имя таблицы в БД в которую ведем запись
   connection_info:  # данные о подключении (должны совпадать со значениями из docker-compose файла)
-    user: ${oc.env:POSTGRES_USER}
-    password: ${oc.env:POSTGRES_PASSWORD}
-    host: pg_db
+    user: root
+    password: root
+    host: postgresS
     port: 5432 # порт контейнера с PostgreSQL
-    database: ${oc.env:POSTGRES_DB}
+    database: grim

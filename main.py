@@ -3,7 +3,7 @@ from nodes.VideoReader import VideoReader
 from nodes.DetectionTrackingNodes import DetectionTrackingNodes
 from nodes.VideoShow import VideoShowDetection
 from nodes.VideoSaverNode import VideoSaverNode
-from nodes.SendInfoDBNode import SendInfoDBNode
+from nodes.SendInfoDBNode_old import SendInfoDBNode
 # import cv2
 
 
@@ -12,6 +12,7 @@ def main(config) -> None:
     video_reader = VideoReader(config["video_reader"])
     detection_node = DetectionTrackingNodes(config)
     show_detection_node = VideoShowDetection(config)
+    # SendInfoDBNode(config)
 
     save_video = config["pipeline"]["save_video"]
     send_info_db = config["pipeline"]["send_info_db"]
