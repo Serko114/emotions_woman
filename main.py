@@ -3,7 +3,7 @@ from nodes.VideoReader import VideoReader
 from nodes.DetectionTrackingNodes import DetectionTrackingNodes
 from nodes.VideoShow import VideoShowDetection
 from nodes.VideoSaverNode import VideoSaverNode
-from nodes.SendInfoDBNode_old import SendInfoDBNode
+from nodes.SendInfoDBNode import SendInfoDBNode
 # import cv2
 
 

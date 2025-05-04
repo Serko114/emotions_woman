@@ -71,7 +71,7 @@ class SendInfoDBNode:
             surprised INT,
             sad INT,
             evil INT,
-            conf FLOAT(4)
+            conf FLOAT(20)
         );
         """
         logger.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
@@ -80,9 +80,11 @@ class SendInfoDBNode:
             self.cursor.execute(create_table_query)
             self.connection.commit()
             logger.info(f"СОЗДАНИЕ ТАБЛИЦЫ {self.table_name} ЗАВЕРШЕНО УДАЧНО")
-            print('--------------------------------------')
+            # print('--------------------------------------')
         except (Exception, psycopg2.Error) as error:
             logger.error(f"Error while creating table: {error}")
+        logger.info(
+            "====================================================================================")
 
     def process(self, frame_element: FrameElement) -> FrameElement:
         id_list = frame_element.id_list
@@ -103,19 +105,19 @@ class SendInfoDBNode:
                       cls_id: list,
                       tracked_conf: list) -> None:
         logger.info(
-            id_list[0],
-            tracked_xyxy[0][0],
-            tracked_xyxy[0][1],
-            tracked_xyxy[0][2],
-            tracked_xyxy[0][-1],
-            tracked_cls[0],
-            cls_id[0],
-            cls_id[1],
-            cls_id[2],
-            cls_id[3],
-            cls_id[4],
-            cls_id[-1],
-            tracked_conf[0]
+            type(id_list[0]),
+            type(tracked_xyxy[0][0]),
+            type(tracked_xyxy[0][1]),
+            type(tracked_xyxy[0][2]),
+            type(tracked_xyxy[0][-1]),
+            type(tracked_cls[0]),
+            type(int(cls_id[0])),
+            type(int(cls_id[1])),
+            type(int(cls_id[2])),
+            type(int(cls_id[3])),
+            type(int(cls_id[4])),
+            type(int(cls_id[5])),
+            type(float(tracked_conf[0]))
 
         )
         insert_query = (
@@ -127,22 +129,23 @@ class SendInfoDBNode:
             self.cursor.execute(
                 insert_query,
                 (
-                    id_list[0],
-                    tracked_xyxy[0][0],
-                    tracked_xyxy[0][1],
-                    tracked_xyxy[0][2],
-                    tracked_xyxy[0][-1],
+                    int(id_list[0]),
+                    int(tracked_xyxy[0][0]),
+                    int(tracked_xyxy[0][1]),
+                    int(tracked_xyxy[0][2]),
+                    int(tracked_xyxy[0][-1]),
                     tracked_cls[0],
-                    cls_id[0],
-                    cls_id[1],
-                    cls_id[2],
-                    cls_id[3],
-                    cls_id[4],
-                    cls_id[-1],
-                    tracked_conf[0]
+                    int(cls_id[0]),
+                    int(cls_id[1]),
+                    int(cls_id[2]),
+                    int(cls_id[3]),
+                    int(cls_id[4]),
+                    int(cls_id[-1]),
+                    float(tracked_conf[0])
 
                 ),
             )
+
             self.connection.commit()
             print(self.cursor.fetchall())
             logger.info(f"Successfully inserted data into PostgreSQL")
