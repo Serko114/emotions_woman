@@ -91,7 +91,7 @@ ultralytics (включает и YOLOv8m), в третьем уже происх
 **2.1 Подгружаем БД PostgereSQL и pgadmin4 все в контейнерах**
 Подсказка по подключению БД к pgadmin4 указана ниже:
 
-![Результат](content_for_readme/connection.png)
+![Результат](content_for_readme/connection_.png)
 
 
 >Еще подсказка: **docker attach [id контейнера]** - это слушать контейнер, чтобы отлавливать ошибки
