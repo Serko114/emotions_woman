@@ -105,10 +105,13 @@ ultralytics (включает и YOLOv8m), в третьем уже происх
 
 **conf** - коэффициент уверенности в правильности предсказания
 
-**3.1 рнтнетн**
 
 ## 4. Подключение Grafana к БД.
 
 Блок Grafana добавляем в compose-файл, затем подключаем данные из Grafana к postgres вот так вот (параметры, которых нет на картинке - без изменений):
 
 ![Результат](content_for_readme/grafana_подключение.png)
+
+Статистики Grafana:
+
+![Результат](content_for_readme/emotions_Grafana_short.gif)
