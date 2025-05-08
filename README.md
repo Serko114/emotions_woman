@@ -114,4 +114,4 @@ ultralytics (включает и YOLOv8m), в третьем уже происх
 
 Статистики Grafana:
 
-![Результат](content_for_readme/emotions_Grafana_short.gif)
+![Результат](content_for_readme/emotions_Grafana_short_cut.gif)
