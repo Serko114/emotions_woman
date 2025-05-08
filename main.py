@@ -26,17 +26,17 @@ def main(config) -> None:
 
     for frame_element in video_reader.process():
         frame_element = detection_node.process(frame_element)
-        print('FUCK111!')
+        # print('FUCK111!')
 
         if send_info_db:
             frame_element = send_info_db_node.process(frame_element)
-        print('FUCK222!')
+        # print('FUCK222!')
         # frame_element = show_detection_node.process(frame_element)
         if video_show:
             show_detection_node.process(frame_element)
         if save_video:
             video_saver_node.process(frame_element)
-        print('iiiiiiiiii')
+        # print('iiiiiiiiii')
         # print()
 
 

@@ -29,4 +29,5 @@ class VideoReader:
             #     break
             # cv2.waitKey(1)
 # -----------------------конец блока 'для просмотра видео'------
+            print(frame_num)
             yield FrameElement(source, frame, frame_num, frame_width, frame_height)

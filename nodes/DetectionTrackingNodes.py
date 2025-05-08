@@ -136,5 +136,5 @@ class DetectionTrackingNodes:
         s = max([i[-2] for i in detections_list])
         detections_list = [i for i in detections_list if i[-2] == s]
         # ----------------------------
-        print(f'РЕЗУЛЬТАТ ОКОНЧАТЕЛЬНЫЙ: {detections_list}')
+        # print(f'РЕЗУЛЬТАТ ОКОНЧАТЕЛЬНЫЙ: {detections_list}')
         return np.array(detections_list)
